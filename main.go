@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
@@ -57,10 +56,7 @@ func main() {
 		text := tweet.Text
 		name := tweet.User.ScreenName
 
-		rand.Seed(42)
-		num := rand.Intn(1000000)
-
-		filename := strconv.Itoa(num)
+		filename := strconv.FormatInt(tweet.Id, 10)
 
 		cmd := exec.Command("raspistill", "--quality", "10", "-o", "/tmp/pic.jpg")
 		err := cmd.Run()
