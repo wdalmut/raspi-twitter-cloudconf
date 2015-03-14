@@ -14,6 +14,8 @@ import (
 
 	"github.com/goamz/goamz/aws"
 	"github.com/goamz/goamz/s3"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type Config struct {
@@ -26,9 +28,12 @@ type Config struct {
 }
 
 func main() {
+
 	file, e := ioutil.ReadFile("./config.json")
 	if e != nil {
-		fmt.Printf("File error: %v\n", e)
+		log.WithFields(log.Fields{
+			"type": "bootstrap",
+		}).Fatal("Unable to find the configuration file 'config.json'")
 		os.Exit(1)
 	}
 
@@ -56,13 +61,22 @@ func main() {
 		text := tweet.Text
 		name := tweet.User.ScreenName
 
+		log.WithFields(log.Fields{
+			"user": name,
+			"type": "tweet",
+		}).Info(text)
+
 		filename := strconv.FormatInt(tweet.Id, 10)
 
 		cmd := exec.Command("raspistill", "--quality", "10", "-o", "/tmp/pic.jpg")
 		err := cmd.Run()
 
 		if err != nil {
-			fmt.Println("Unable to get the picture!")
+			log.WithFields(log.Fields{
+				"user": name,
+				"type": "pic",
+			}).Error("Unable to get the picture!!")
+
 			return
 		}
 
@@ -70,6 +84,7 @@ func main() {
 		fileToBeUploaded := "/tmp/pic.jpg"
 
 		file, err := os.Open(fileToBeUploaded)
+		defer file.Close()
 
 		if err != nil {
 			fmt.Println(err)
@@ -86,11 +101,16 @@ func main() {
 		err = bucket.Put(path, bytes, "image/png", s3.ACL("public-read"), s3.Options{})
 
 		if err != nil {
-			fmt.Println(err)
+			log.WithFields(log.Fields{
+				"user": name,
+				"type": "upload",
+			}).Error("Unable to upload the picture on S3!!!")
+
 		}
-		file.Close()
 
-		fmt.Printf("Tweet: %s is %s\n\n", text, name)
-
+		log.WithFields(log.Fields{
+			"user": name,
+			"type": "tweet",
+		}).Info(fmt.Printf("Tweet correctly uploaded! %s", tweet))
 	})
 }
