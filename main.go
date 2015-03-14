@@ -62,7 +62,7 @@ func main() {
 
 		filename := strconv.Itoa(num)
 
-		cmd := exec.Command("raspistill", "-o", "/tmp/pic.jpg")
+		cmd := exec.Command("raspistill", "--quality", "10", "-o", "/tmp/pic.jpg")
 		err := cmd.Run()
 
 		if err != nil {
