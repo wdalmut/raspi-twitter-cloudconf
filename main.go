@@ -70,7 +70,7 @@ func main() {
 
 		cmd := exec.Command(
 			"raspistill",
-			"-a", "\"www.cloudconf.it - #cloudconf2015\"",
+			"-a", "www.cloudconf.it - #cloudconf2015",
 			"-t", "500",
 			"-vf", "-hf",
 			"-w", "1024", "-h", "768",
@@ -117,6 +117,6 @@ func main() {
 		log.WithFields(log.Fields{
 			"user": name,
 			"type": "tweet",
-		}).Info(fmt.Printf("Tweet correctly uploaded! %s", tweet.Text))
+		}).Info(fmt.Printf("Tweet correctly uploaded! %s", text))
 	})
 }
