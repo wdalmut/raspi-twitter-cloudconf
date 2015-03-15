@@ -68,7 +68,7 @@ func main() {
 
 		filename := strconv.FormatInt(tweet.Id, 10)
 
-		cmd := exec.Command("raspistill", "--quality", "10", "-o", "/tmp/pic.jpg")
+		cmd := exec.Command("raspistill", "-t", "500", "-vf", "-hf", "-w", "1024", "-h", "768", "--quality", "60", "-o", "/tmp/pic.jpg")
 		err := cmd.Run()
 
 		if err != nil {
