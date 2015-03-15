@@ -68,16 +68,21 @@ func main() {
 
 		filename := strconv.FormatInt(tweet.Id, 10)
 
-		cmd := exec.Command("raspistill", "-t", "500", "-vf", "-hf", "-w", "1024", "-h", "768", "--quality", "60", "-o", "/tmp/pic.jpg")
+		cmd := exec.Command(
+			"raspistill",
+			"-a", "www.cloudconf.it",
+			"-t", "500",
+			"-vf", "-hf",
+			"-w", "1024", "-h", "768",
+			"--quality", "60",
+			"-o", "/tmp/pic.jpg")
 		err := cmd.Run()
 
 		if err != nil {
 			log.WithFields(log.Fields{
 				"user": name,
 				"type": "pic",
-			}).Error("Unable to get the picture!!")
-
-			return
+			}).Error("Unable to get the picture, send the latest picture...")
 		}
 
 		path := name + "/" + filename + ".jpg"
@@ -104,8 +109,9 @@ func main() {
 			log.WithFields(log.Fields{
 				"user": name,
 				"type": "upload",
-			}).Error("Unable to upload the picture on S3!!!")
+			}).Error("Unable to upload the picture on S3!!! I have to exit...")
 
+			return
 		}
 
 		log.WithFields(log.Fields{
