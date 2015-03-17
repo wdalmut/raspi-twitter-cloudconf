@@ -18,6 +18,10 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
+const (
+	BUCKET = "pic.2015.cloudconf.it"
+)
+
 type Config struct {
 	ConsumerKey    string
 	ConsumerSecret string
@@ -55,7 +59,7 @@ func main() {
 	region := aws.EUWest
 
 	connection := s3.New(AWSAuth, region)
-	bucket := connection.Bucket("example.walterdalmut.com")
+	bucket := connection.Bucket(BUCKET)
 
 	client.TrackAndServe("cloudconf2015", func(tweet *twitterstream.Tweet) {
 		text := tweet.Text
@@ -103,7 +107,7 @@ func main() {
 		buffer := bufio.NewReader(file)
 		_, err = buffer.Read(bytes)
 
-		err = bucket.Put(path, bytes, "image/png", s3.ACL("public-read"), s3.Options{})
+		err = bucket.Put(path, bytes, "image/jpg", s3.ACL("public-read"), s3.Options{})
 
 		if err != nil {
 			log.WithFields(log.Fields{
