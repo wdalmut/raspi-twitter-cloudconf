@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 
 	"github.com/darkhelmet/twitterstream"
 	"github.com/wdalmut/twitterstream/async"
@@ -64,6 +65,10 @@ func main() {
 	client.TrackAndServe("cloudconf2015", func(tweet *twitterstream.Tweet) {
 		text := tweet.Text
 		name := tweet.User.ScreenName
+
+		if !strings.Contains(text, "#pic") {
+			return
+		}
 
 		log.WithFields(log.Fields{
 			"user": name,
