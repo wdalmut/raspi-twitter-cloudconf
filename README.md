@@ -3,6 +3,14 @@
 Whenever someone tweet on our selected key the camera takes a pictures and
 upload it on AWS S3.
 
+## Deploy it!
+
+Replace `TARGET` with your Raspberry Pi network address
+
+```
+TARGET=192.168.1.2 make
+```
+
 ## Run it
 
 Prepare a `config.json` file (use the dist as example)

@@ -62,18 +62,21 @@ func main() {
 	connection := s3.New(AWSAuth, region)
 	bucket := connection.Bucket(BUCKET)
 
+	log.WithFields(log.Fields{}).Info("Raspi is running!")
+
 	client.TrackAndServe("cloudconf2015", func(tweet *twitterstream.Tweet) {
 		text := tweet.Text
 		name := tweet.User.ScreenName
-
-		if !strings.Contains(text, "#pic") {
-			return
-		}
 
 		log.WithFields(log.Fields{
 			"user": name,
 			"type": "tweet",
 		}).Info(text)
+
+		if !strings.Contains(text, "#pic") {
+			log.WithFields(log.Fields{}).Info("Missing #pic hashtag, skip immediately!")
+			return
+		}
 
 		filename := strconv.FormatInt(tweet.Id, 10)
 
